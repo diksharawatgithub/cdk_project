@@ -1,0 +1,52 @@
+{
+  "Layers": [
+    
+    {
+      "LayerName": "libraries",
+      "LayerArn": "string",
+      "CodeLocation": "cdk_demo/assets/lambda/layer/libraries",
+      "Version": 1,
+      "Description": "Third Party libraries",
+      "CompatibleRuntimes": "python3.8",
+      "LicenseInfo": "Apache-2.0"
+    }
+  ],
+  "Configuration": [
+   
+    {
+      "FunctionName": "http_response",
+      "Runtime": "python3.8",
+      "Handler": "http_response.lambda_handler",
+      "Description": "string",
+      "Timeout": 3,
+      "MemorySize": 128,
+      "Tags": "string",
+      "code_Location": "cdk_demo/assets/lambda/http_response",
+      "Layerwithversion": [
+        {
+          "libraries": "1"
+        }
+      ],
+      "Trigger": "None",
+      "env_variables": [
+        "DB_SECRET"
+      ],
+      "local_variables": {
+        "TASK_TYPE": "customer"
+        },
+      "Statement": [
+        {
+          "Action": [
+            "secretsmanager:Get*",
+            "secretsmanager:Describe*",
+            "secretsmanager:List*"
+          ],
+          "Resource": "*",
+          "Effect": "ALLOW"
+        }
+      ]
+    }
+    
+      
+  ]
+}

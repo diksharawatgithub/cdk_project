@@ -1,0 +1,150 @@
+version: 0.2
+
+env:
+  secrets-manager:
+    DB_IDENTIFIER: "cdk-prod-dbpipeline:dbInstanceIdentifier"
+    USERNAME: "cdk-prod-dbpipeline:username"
+    PASSWORD: "cdk-prod-dbpipeline:password"
+    DBNAME: "cdk-prod-dbpipeline:dbname"
+    SCHEMA: "cdk-prod-dbpipeline:schema"
+    DB_HOST: "cdk-prod-dbpipeline:host"
+    RESTORE_DB_HOST: "cdk-prod-dbpipeline:restoreddb_host"
+    
+phases:
+  install:
+    on-failure: ABORT
+    runtime-versions:
+      python: 3.8
+      java: corretto11
+    commands:
+      - pip3 install awscli --upgrade --user
+      - echo Creating commit hash 
+      - COMMIT_HASH=$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | head -c 7) 
+
+  pre_build:
+    on-failure: ABORT
+    commands:
+      - export ENDPOINT=$RESTORE_DB_HOST
+      - export MAIN_ENDPOINT=$DB_HOST
+      - export TEMP_DB_URL="jdbc:postgresql://$ENDPOINT:5432/$DBNAME"
+      - echo $TEMP_DB_URL
+      - export DB_URL="jdbc:postgresql://$MAIN_ENDPOINT:5432/$DBNAME"
+      - echo $DB_URL
+      - export TAG=$(date +%Y%m%d_%H%M)
+      - echo $TAG
+      - psql --version
+      #check if liquibase tables exists in temp DB or not
+      - export PGPASSWORD=$PASSWORD
+      - PGOPTIONS="--search_path=$SCHEMA"
+      - export PGOPTIONS
+      - export test_temp_tbl="$(psql -h $ENDPOINT -U $USERNAME -d $DBNAME -c 'select * from databasechangelog' 2> errorlog.txt)"
+      - echo $test_temp_tbl
+      - more errorlog.txt
+      - |
+        if grep -q "ERROR" errorlog.txt 
+        then
+          echo "No table found"
+          docker run --rm -v $CODEBUILD_SRC_DIR/Database/liquibase/migration/:/liquibase/changelog liquibase/liquibase:4.3.5 --defaultsFile=/liquibase/changelog/liquibase.properties --username=$USERNAME --password=$PASSWORD --defaultSchemaName=$SCHEMA --url=$TEMP_DB_URL validate
+          docker run --rm -v $CODEBUILD_SRC_DIR/Database/liquibase/migration/:/liquibase/changelog liquibase/liquibase:4.3.5 --defaultsFile=/liquibase/changelog/liquibase.properties --username=$USERNAME --password=$PASSWORD --defaultSchemaName=$SCHEMA --url=$TEMP_DB_URL tag baseline
+        else
+          echo "table found"
+        fi
+      - export PGPASSWORD=$PASSWORD
+      - export old_temp_DB_tag=$(psql -h $ENDPOINT -t -U $USERNAME -d $DBNAME -c 'select tag from databasechangelog where tag is not null order by orderexecuted DESC LIMIT 1')
+      - echo $old_temp_DB_tag
+      #check if liquibase tables exists in main DB or not
+      - export PGPASSWORD=$PASSWORD
+      - export test_main_tbl="$(psql -h $DB_HOST -U $USERNAME -d $DBNAME -c 'select * from databasechangelog' 2> errorlog2.txt)"
+      - echo $test_main_tbl
+      - more errorlog2.txt
+      - |
+        if grep -q "ERROR" errorlog2.txt 
+        then
+          echo "No table found"
+          docker run --rm -v $CODEBUILD_SRC_DIR/Database/liquibase/migration/:/liquibase/changelog liquibase/liquibase:4.3.5 --defaultsFile=/liquibase/changelog/liquibase.properties --username=$USERNAME --password=$PASSWORD --defaultSchemaName=$SCHEMA --url=$DB_URL validate
+          docker run --rm -v $CODEBUILD_SRC_DIR/Database/liquibase/migration/:/liquibase/changelog liquibase/liquibase:4.3.5 --defaultsFile=/liquibase/changelog/liquibase.properties --username=$USERNAME --password=$PASSWORD --defaultSchemaName=$SCHEMA --url=$DB_URL tag baseline
+        else
+          echo "table found"
+        fi
+      - export PGPASSWORD=$PASSWORD
+      - export old_main_DB_tag=$(psql -h $DB_HOST -t -U $USERNAME -d $DBNAME -c 'select tag from databasechangelog where tag is not null order by orderexecuted DESC LIMIT 1')
+      - echo $old_main_DB_tag
+      - cd $CODEBUILD_SRC_DIR
+      - ls $CODEBUILD_SRC_DIR
+      - echo "Validating TEMP DB"
+      - export Validating_temp_DB=$(docker run --rm -v $CODEBUILD_SRC_DIR/Database/liquibase/migration/:/liquibase/changelog liquibase/liquibase:4.3.5 --defaultsFile=/liquibase/changelog/liquibase.properties --username=$USERNAME --password=$PASSWORD --defaultSchemaName=$SCHEMA --url=$TEMP_DB_URL validate)
+      - echo "Validation completed"
+      - |
+        if [ -z $(grep '[^[:space:]]' $CODEBUILD_SRC_DIR/Database/liquibase/migration/ext_commands) ];then 
+          echo "The external file is empty"
+          echo "Validate rollforward and rollback scripts"
+          export migrate_status_temp=$(docker run --rm -v $CODEBUILD_SRC_DIR/Database/liquibase/migration/:/liquibase/changelog liquibase/liquibase:4.3.5 --defaultsFile=/liquibase/changelog/liquibase.properties --username=$USERNAME --password=$PASSWORD --defaultSchemaName=$SCHEMA --url=$TEMP_DB_URL updateTestingRollback)
+          echo "Status is------"
+          echo $migrate_status_temp
+          if [ $(echo $migrate_status_temp | grep -c "Liquibase command 'updateTestingRollback' was executed successfully.") -ge 1 ];then
+            echo "Versioning completed for TEMP DB"
+            echo "Creating latest tagging on TEMP DB"
+            export Tagging_temp_DB=$(docker run --rm -v $CODEBUILD_SRC_DIR/Database/liquibase/migration/:/liquibase/changelog liquibase/liquibase:4.3.5 --defaultsFile=/liquibase/changelog/liquibase.properties --username=$USERNAME --password=$PASSWORD --defaultSchemaName=$SCHEMA --url=$TEMP_DB_URL tag $TAG)
+            echo "Tagging completed"
+            export VERSIONING_DONE_TEMP=1
+          else
+            export VERSIONING_FAILED_TEMP=1
+            echo "versioning failed for temp db"
+            echo "rolling back to previous DB state"
+            docker run --rm -v $CODEBUILD_SRC_DIR/Database/liquibase/migration/:/liquibase/changelog liquibase/liquibase:4.3.5 --defaultsFile=/liquibase/changelog/liquibase.properties --username=$USERNAME --password=$PASSWORD --defaultSchemaName=$SCHEMA --url=$TEMP_DB_URL rollback $old_temp_DB_tag
+          fi
+        else
+          echo "The external file is not empty"
+          chmod 777 $CODEBUILD_SRC_DIR/Database/liquibase/migration/ext_commands
+          ls -ltr $CODEBUILD_SRC_DIR/Database/liquibase/migration/
+          cat $CODEBUILD_SRC_DIR/Database/liquibase/migration/ext_commands | while read line; do echo $line; docker run --rm -v $CODEBUILD_SRC_DIR/Database/liquibase/migration/:/liquibase/changelog liquibase/liquibase:4.3.5 --defaultsFile=/liquibase/changelog/liquibase.properties --username=$USERNAME --password=$PASSWORD --defaultSchemaName=$SCHEMA --url=$TEMP_DB_URL rollback $line; done
+        fi
+  build:
+    commands:
+      - echo $DB_URL
+      - echo "Deployement started on main DB"
+      - echo "Validating main DB"
+      - export Validating_main_DB=$(docker run --rm -v $CODEBUILD_SRC_DIR/Database/liquibase/migration/:/liquibase/changelog liquibase/liquibase:4.3.5 --defaultsFile=/liquibase/changelog/liquibase.properties --username=$USERNAME --password=$PASSWORD --defaultSchemaName=$SCHEMA --url=$DB_URL validate)
+      - echo "Validation completed on main DB"
+      - |
+        if [ -z $(grep '[^[:space:]]' $CODEBUILD_SRC_DIR/Database/liquibase/migration/ext_commands) ];then 
+            echo "The external file is empty"
+            if [ "$VERSIONING_FAILED_TEMP" = 1 ];then
+              echo "Skipped original data migration. No actions required on original database"
+            else
+              export migrate_status_main=$(docker run --rm -v $CODEBUILD_SRC_DIR/Database/liquibase/migration/:/liquibase/changelog liquibase/liquibase:4.3.5 --defaultsFile=/liquibase/changelog/liquibase.properties --username=$USERNAME --password=$PASSWORD --defaultSchemaName=$SCHEMA --url=$DB_URL update)
+              echo "Status is-----"
+              echo $migrate_status_main
+              if [ $(echo $migrate_status_main | grep -c 'Liquibase: Update has been successful.') -ge 1 ];then
+                echo "Versioning completed for main DB"
+                echo "Creating latest tagging on main DB"
+                export Tagging_main_DB=$(docker run --rm -v $CODEBUILD_SRC_DIR/Database/liquibase/migration/:/liquibase/changelog liquibase/liquibase:4.3.5 --defaultsFile=/liquibase/changelog/liquibase.properties --username=$USERNAME --password=$PASSWORD --defaultSchemaName=$SCHEMA --url=$DB_URL tag $TAG)
+                echo "Tagging completed for main DB"
+                export VERSIONING_DONE_MAIN=1
+              else
+                export VERSIONING_FAILED_MAIN=1
+                echo "versioning failed for main db"
+                echo "rolling back to previous DB state"
+                docker run --rm -v $CODEBUILD_SRC_DIR/Database/liquibase/migration/:/liquibase/changelog liquibase/liquibase:4.3.5 --defaultsFile=/liquibase/changelog/liquibase.properties --username=$USERNAME --password=$PASSWORD --defaultSchemaName=$SCHEMA --url=$DB_URL rollback $old_main_DB_tag
+              fi
+            fi
+        else
+            echo "The external file is not empty"
+            chmod 777 $CODEBUILD_SRC_DIR/Database/liquibase/migration/ext_commands
+            ls -ltr $CODEBUILD_SRC_DIR/Database/liquibase/migration/
+            cat $CODEBUILD_SRC_DIR/Database/liquibase/migration/ext_commands | while read line; do echo $line; docker run --rm -v $CODEBUILD_SRC_DIR/Database/liquibase/migration/:/liquibase/changelog liquibase/liquibase:4.3.5 --defaultsFile=/liquibase/changelog/liquibase.properties --username=$USERNAME --password=$PASSWORD --defaultSchemaName=$SCHEMA --url=$DB_URL rollback $line; done
+        fi
+  post_build:
+    commands:
+        - echo "Checking build phase status for"
+        - echo $CODEBUILD_BUILD_SUCCEEDING
+        - |
+          if [ "$VERSIONING_DONE_TEMP" != 1 ];then
+           echo "Skipped original data migration. No actions required on original database"
+          else
+           if [ "$VERSIONING_DONE_MAIN" != 1 ];then
+            echo "Skipping liquibase deployment"
+           else
+            echo "Build stage succeded"
+           fi
+          fi

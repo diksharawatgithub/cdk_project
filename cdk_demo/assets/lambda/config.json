@@ -1,0 +1,20 @@
+{
+  "env": {
+    "prod": {
+      "Vpcconfig": [
+        {
+          "VpcName": "demo_vpc",
+          "SubnetIds": [
+            "subnet-0b216efaea3e0e08f",
+            "subnet-06ab0b55edee59aee"
+          ],
+          "SecurityGroupIds": [
+            "sg-0314e399e9d0d1839"
+          ]
+        }
+      ],
+      "DB_SECRET": "prod_db"
+      
+  }
+}
+}

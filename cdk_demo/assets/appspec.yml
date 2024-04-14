@@ -1,0 +1,13 @@
+version: 0.0
+os: linux
+files:
+  - source: /qmodoai-cms-jars
+    destination: /home/ubuntu/liferay-dxp-7.2.10.3-sp3/deploy
+  - source: /configs
+    destination: /home/ubuntu/configs/
+  - source: /CMS/QmodoAI-Liferay-WorkSpace/jars
+    destination: /home/ubuntu/liferay-dxp-7.2.10.3-sp3/deploy
+hooks:
+  BeforeInstall:
+    - location: Scripts/BackupResources.sh
+    - location: Scripts/ConfigurableScript.sh

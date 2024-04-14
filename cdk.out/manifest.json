@@ -1,0 +1,387 @@
+{
+  "version": "36.0.0",
+  "artifacts": {
+    "CdkDemoLambdaStack-prod.assets": {
+      "type": "cdk:asset-manifest",
+      "properties": {
+        "file": "CdkDemoLambdaStack-prod.assets.json",
+        "requiresBootstrapStackVersion": 6,
+        "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version"
+      }
+    },
+    "CdkDemoLambdaStack-prod": {
+      "type": "aws:cloudformation:stack",
+      "environment": "aws://199441718561/us-east-1",
+      "properties": {
+        "templateFile": "CdkDemoLambdaStack-prod.template.json",
+        "terminationProtection": false,
+        "validateOnSynth": false,
+        "assumeRoleArn": "arn:${AWS::Partition}:iam::199441718561:role/cdk-hnb659fds-deploy-role-199441718561-us-east-1",
+        "cloudFormationExecutionRoleArn": "arn:${AWS::Partition}:iam::199441718561:role/cdk-hnb659fds-cfn-exec-role-199441718561-us-east-1",
+        "stackTemplateAssetObjectUrl": "s3://cdk-hnb659fds-assets-199441718561-us-east-1/ecd83dce83df887660f47d2a01e55e7c5df9d955353ae760d13851a4fb387947.json",
+        "requiresBootstrapStackVersion": 6,
+        "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version",
+        "additionalDependencies": [
+          "CdkDemoLambdaStack-prod.assets"
+        ],
+        "lookupRole": {
+          "arn": "arn:${AWS::Partition}:iam::199441718561:role/cdk-hnb659fds-lookup-role-199441718561-us-east-1",
+          "requiresBootstrapStackVersion": 8,
+          "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version"
+        }
+      },
+      "dependencies": [
+        "CdkDemoLambdaStack-prod.assets"
+      ],
+      "metadata": {
+        "/CdkDemoLambdaStack-prod/libraries/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "libraries0B15FC15"
+          }
+        ],
+        "/CdkDemoLambdaStack-prod/lambda-execution-role-id/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "lambdaexecutionroleid7FC69DD4"
+          }
+        ],
+        "/CdkDemoLambdaStack-prod/lambda-execution-role-id/DefaultPolicy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "lambdaexecutionroleidDefaultPolicyD451DB9E"
+          }
+        ],
+        "/CdkDemoLambdaStack-prod/subnet1": [
+          {
+            "type": "aws:cdk:warning",
+            "data": "No routeTableId was provided to the subnet 'subnet-0b216efaea3e0e08f'. Attempting to read its .routeTable.routeTableId will return null/undefined. (More info: https://github.com/aws/aws-cdk/pull/3171) [ack: @aws-cdk/aws-ec2:noSubnetRouteTableId]",
+            "trace": [
+              "Annotations.addMessage (C:\\Users\\Lenovo\\AppData\\Local\\Temp\\jsii-kernel-LZKRYQ\\node_modules\\aws-cdk-lib\\core\\lib\\annotations.js:1:1608)",
+              "Annotations.addWarningV2 (C:\\Users\\Lenovo\\AppData\\Local\\Temp\\jsii-kernel-LZKRYQ\\node_modules\\aws-cdk-lib\\core\\lib\\annotations.js:1:825)",
+              "new ImportedSubnet (C:\\Users\\Lenovo\\AppData\\Local\\Temp\\jsii-kernel-LZKRYQ\\node_modules\\aws-cdk-lib\\aws-ec2\\lib\\vpc.js:1:31475)",
+              "PrivateSubnet.fromSubnetAttributes (C:\\Users\\Lenovo\\AppData\\Local\\Temp\\jsii-kernel-LZKRYQ\\node_modules\\aws-cdk-lib\\aws-ec2\\lib\\vpc.js:1:20138)",
+              "PrivateSubnet.fromSubnetId (C:\\Users\\Lenovo\\AppData\\Local\\Temp\\jsii-kernel-LZKRYQ\\node_modules\\aws-cdk-lib\\aws-ec2\\lib\\vpc.js:1:20224)",
+              "C:\\Users\\Lenovo\\AppData\\Local\\Temp\\tmp52gmw1gk\\lib\\program.js:9876:152",
+              "Kernel._Kernel_ensureSync (C:\\Users\\Lenovo\\AppData\\Local\\Temp\\tmp52gmw1gk\\lib\\program.js:10480:24)",
+              "Kernel.sinvoke (C:\\Users\\Lenovo\\AppData\\Local\\Temp\\tmp52gmw1gk\\lib\\program.js:9876:102)",
+              "KernelHost.processRequest (C:\\Users\\Lenovo\\AppData\\Local\\Temp\\tmp52gmw1gk\\lib\\program.js:11699:36)",
+              "KernelHost.run (C:\\Users\\Lenovo\\AppData\\Local\\Temp\\tmp52gmw1gk\\lib\\program.js:11659:22)",
+              "Immediate._onImmediate (C:\\Users\\Lenovo\\AppData\\Local\\Temp\\tmp52gmw1gk\\lib\\program.js:11660:46)",
+              "process.processImmediate (node:internal/timers:478:21)"
+            ]
+          }
+        ],
+        "/CdkDemoLambdaStack-prod/subnet2": [
+          {
+            "type": "aws:cdk:warning",
+            "data": "No routeTableId was provided to the subnet 'subnet-06ab0b55edee59aee'. Attempting to read its .routeTable.routeTableId will return null/undefined. (More info: https://github.com/aws/aws-cdk/pull/3171) [ack: @aws-cdk/aws-ec2:noSubnetRouteTableId]",
+            "trace": [
+              "Annotations.addMessage (C:\\Users\\Lenovo\\AppData\\Local\\Temp\\jsii-kernel-LZKRYQ\\node_modules\\aws-cdk-lib\\core\\lib\\annotations.js:1:1608)",
+              "Annotations.addWarningV2 (C:\\Users\\Lenovo\\AppData\\Local\\Temp\\jsii-kernel-LZKRYQ\\node_modules\\aws-cdk-lib\\core\\lib\\annotations.js:1:825)",
+              "new ImportedSubnet (C:\\Users\\Lenovo\\AppData\\Local\\Temp\\jsii-kernel-LZKRYQ\\node_modules\\aws-cdk-lib\\aws-ec2\\lib\\vpc.js:1:31475)",
+              "PrivateSubnet.fromSubnetAttributes (C:\\Users\\Lenovo\\AppData\\Local\\Temp\\jsii-kernel-LZKRYQ\\node_modules\\aws-cdk-lib\\aws-ec2\\lib\\vpc.js:1:20138)",
+              "PrivateSubnet.fromSubnetId (C:\\Users\\Lenovo\\AppData\\Local\\Temp\\jsii-kernel-LZKRYQ\\node_modules\\aws-cdk-lib\\aws-ec2\\lib\\vpc.js:1:20224)",
+              "C:\\Users\\Lenovo\\AppData\\Local\\Temp\\tmp52gmw1gk\\lib\\program.js:9876:152",
+              "Kernel._Kernel_ensureSync (C:\\Users\\Lenovo\\AppData\\Local\\Temp\\tmp52gmw1gk\\lib\\program.js:10480:24)",
+              "Kernel.sinvoke (C:\\Users\\Lenovo\\AppData\\Local\\Temp\\tmp52gmw1gk\\lib\\program.js:9876:102)",
+              "KernelHost.processRequest (C:\\Users\\Lenovo\\AppData\\Local\\Temp\\tmp52gmw1gk\\lib\\program.js:11699:36)",
+              "KernelHost.run (C:\\Users\\Lenovo\\AppData\\Local\\Temp\\tmp52gmw1gk\\lib\\program.js:11659:22)",
+              "Immediate._onImmediate (C:\\Users\\Lenovo\\AppData\\Local\\Temp\\tmp52gmw1gk\\lib\\program.js:11660:46)",
+              "process.processImmediate (node:internal/timers:478:21)"
+            ]
+          }
+        ],
+        "/CdkDemoLambdaStack-prod/http_response/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "httpresponse988D137F"
+          }
+        ],
+        "/CdkDemoLambdaStack-prod/CDKMetadata/Default": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CDKMetadata"
+          }
+        ],
+        "/CdkDemoLambdaStack-prod/BootstrapVersion": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BootstrapVersion"
+          }
+        ],
+        "/CdkDemoLambdaStack-prod/CheckBootstrapVersion": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CheckBootstrapVersion"
+          }
+        ]
+      },
+      "displayName": "CdkDemoLambdaStack-prod"
+    },
+    "CdkDemoVPCStack-prod.assets": {
+      "type": "cdk:asset-manifest",
+      "properties": {
+        "file": "CdkDemoVPCStack-prod.assets.json",
+        "requiresBootstrapStackVersion": 6,
+        "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version"
+      }
+    },
+    "CdkDemoVPCStack-prod": {
+      "type": "aws:cloudformation:stack",
+      "environment": "aws://199441718561/us-east-1",
+      "properties": {
+        "templateFile": "CdkDemoVPCStack-prod.template.json",
+        "terminationProtection": false,
+        "validateOnSynth": false,
+        "assumeRoleArn": "arn:${AWS::Partition}:iam::199441718561:role/cdk-hnb659fds-deploy-role-199441718561-us-east-1",
+        "cloudFormationExecutionRoleArn": "arn:${AWS::Partition}:iam::199441718561:role/cdk-hnb659fds-cfn-exec-role-199441718561-us-east-1",
+        "stackTemplateAssetObjectUrl": "s3://cdk-hnb659fds-assets-199441718561-us-east-1/1b15aa7d06d74e10ffb09d54498e20125eca5528f4302151b5c3b2cca412423d.json",
+        "requiresBootstrapStackVersion": 6,
+        "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version",
+        "additionalDependencies": [
+          "CdkDemoVPCStack-prod.assets"
+        ],
+        "lookupRole": {
+          "arn": "arn:${AWS::Partition}:iam::199441718561:role/cdk-hnb659fds-lookup-role-199441718561-us-east-1",
+          "requiresBootstrapStackVersion": 8,
+          "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version"
+        }
+      },
+      "dependencies": [
+        "CdkDemoVPCStack-prod.assets"
+      ],
+      "metadata": {
+        "/CdkDemoVPCStack-prod/CDKMetadata/Default": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CDKMetadata"
+          }
+        ],
+        "/CdkDemoVPCStack-prod/BootstrapVersion": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BootstrapVersion"
+          }
+        ],
+        "/CdkDemoVPCStack-prod/CheckBootstrapVersion": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CheckBootstrapVersion"
+          }
+        ]
+      },
+      "displayName": "CdkDemoVPCStack-prod"
+    },
+    "CdkDemoStack-prod.assets": {
+      "type": "cdk:asset-manifest",
+      "properties": {
+        "file": "CdkDemoStack-prod.assets.json",
+        "requiresBootstrapStackVersion": 6,
+        "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version"
+      }
+    },
+    "CdkDemoStack-prod": {
+      "type": "aws:cloudformation:stack",
+      "environment": "aws://199441718561/us-east-1",
+      "properties": {
+        "templateFile": "CdkDemoStack-prod.template.json",
+        "terminationProtection": false,
+        "validateOnSynth": false,
+        "assumeRoleArn": "arn:${AWS::Partition}:iam::199441718561:role/cdk-hnb659fds-deploy-role-199441718561-us-east-1",
+        "cloudFormationExecutionRoleArn": "arn:${AWS::Partition}:iam::199441718561:role/cdk-hnb659fds-cfn-exec-role-199441718561-us-east-1",
+        "stackTemplateAssetObjectUrl": "s3://cdk-hnb659fds-assets-199441718561-us-east-1/a4ffb9a4505292c2a35e885f8d31734f1673d774e1d825a21955c25103bda769.json",
+        "requiresBootstrapStackVersion": 6,
+        "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version",
+        "additionalDependencies": [
+          "CdkDemoStack-prod.assets"
+        ],
+        "lookupRole": {
+          "arn": "arn:${AWS::Partition}:iam::199441718561:role/cdk-hnb659fds-lookup-role-199441718561-us-east-1",
+          "requiresBootstrapStackVersion": 8,
+          "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version"
+        }
+      },
+      "dependencies": [
+        "CdkDemoStack-prod.assets"
+      ],
+      "metadata": {
+        "/CdkDemoStack-prod/CdkDemoQueue/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CdkDemoQueue32E7553B"
+          }
+        ],
+        "/CdkDemoStack-prod/CdkDemoQueue/Policy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CdkDemoQueuePolicy23A7259B"
+          }
+        ],
+        "/CdkDemoStack-prod/CdkDemoQueue/CdkDemoStackprodCdkDemoTopic3DACB33B/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CdkDemoQueueCdkDemoStackprodCdkDemoTopic3DACB33BD92B5B44"
+          }
+        ],
+        "/CdkDemoStack-prod/CdkDemoTopic/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CdkDemoTopicCFC15E4B"
+          }
+        ],
+        "/CdkDemoStack-prod/CDKMetadata/Default": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CDKMetadata"
+          }
+        ],
+        "/CdkDemoStack-prod/BootstrapVersion": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BootstrapVersion"
+          }
+        ],
+        "/CdkDemoStack-prod/CheckBootstrapVersion": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CheckBootstrapVersion"
+          }
+        ]
+      },
+      "displayName": "CdkDemoStack-prod"
+    },
+    "CdkDemoPipelineStack-prod.assets": {
+      "type": "cdk:asset-manifest",
+      "properties": {
+        "file": "CdkDemoPipelineStack-prod.assets.json",
+        "requiresBootstrapStackVersion": 6,
+        "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version"
+      }
+    },
+    "CdkDemoPipelineStack-prod": {
+      "type": "aws:cloudformation:stack",
+      "environment": "aws://199441718561/us-east-1",
+      "properties": {
+        "templateFile": "CdkDemoPipelineStack-prod.template.json",
+        "terminationProtection": false,
+        "validateOnSynth": false,
+        "assumeRoleArn": "arn:${AWS::Partition}:iam::199441718561:role/cdk-hnb659fds-deploy-role-199441718561-us-east-1",
+        "cloudFormationExecutionRoleArn": "arn:${AWS::Partition}:iam::199441718561:role/cdk-hnb659fds-cfn-exec-role-199441718561-us-east-1",
+        "stackTemplateAssetObjectUrl": "s3://cdk-hnb659fds-assets-199441718561-us-east-1/3f5bb6dce31121370cf7e03c10d8bec07a4df77b2360bdb99b5bffe1878f10f4.json",
+        "requiresBootstrapStackVersion": 6,
+        "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version",
+        "additionalDependencies": [
+          "CdkDemoPipelineStack-prod.assets"
+        ],
+        "lookupRole": {
+          "arn": "arn:${AWS::Partition}:iam::199441718561:role/cdk-hnb659fds-lookup-role-199441718561-us-east-1",
+          "requiresBootstrapStackVersion": 8,
+          "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version"
+        }
+      },
+      "dependencies": [
+        "CdkDemoPipelineStack-prod.assets"
+      ],
+      "metadata": {
+        "/CdkDemoPipelineStack-prod/cdkbuildrole/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "cdkbuildrole363988C2"
+          }
+        ],
+        "/CdkDemoPipelineStack-prod/cdkbuildrole/DefaultPolicy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "cdkbuildroleDefaultPolicy4AE5BA06"
+          }
+        ],
+        "/CdkDemoPipelineStack-prod/CdkBuild/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CdkBuild455F642E"
+          }
+        ],
+        "/CdkDemoPipelineStack-prod/Pipeline/ArtifactsBucketEncryptionKey/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "PipelineArtifactsBucketEncryptionKey01D58D69"
+          }
+        ],
+        "/CdkDemoPipelineStack-prod/Pipeline/ArtifactsBucketEncryptionKeyAlias/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "PipelineArtifactsBucketEncryptionKeyAlias5C510EEE"
+          }
+        ],
+        "/CdkDemoPipelineStack-prod/Pipeline/ArtifactsBucket/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "PipelineArtifactsBucket22248F97"
+          }
+        ],
+        "/CdkDemoPipelineStack-prod/Pipeline/ArtifactsBucket/Policy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "PipelineArtifactsBucketPolicyD4F9712A"
+          }
+        ],
+        "/CdkDemoPipelineStack-prod/Pipeline/Role/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "PipelineRoleD68726F7"
+          }
+        ],
+        "/CdkDemoPipelineStack-prod/Pipeline/Role/DefaultPolicy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "PipelineRoleDefaultPolicyC7A05455"
+          }
+        ],
+        "/CdkDemoPipelineStack-prod/Pipeline/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "PipelineC660917D"
+          }
+        ],
+        "/CdkDemoPipelineStack-prod/Pipeline/Build/CDK_Build/CodePipelineActionRole/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "PipelineBuildCDKBuildCodePipelineActionRole15F4B424"
+          }
+        ],
+        "/CdkDemoPipelineStack-prod/Pipeline/Build/CDK_Build/CodePipelineActionRole/DefaultPolicy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "PipelineBuildCDKBuildCodePipelineActionRoleDefaultPolicyE350F3F9"
+          }
+        ],
+        "/CdkDemoPipelineStack-prod/CDKMetadata/Default": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CDKMetadata"
+          }
+        ],
+        "/CdkDemoPipelineStack-prod/BootstrapVersion": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BootstrapVersion"
+          }
+        ],
+        "/CdkDemoPipelineStack-prod/CheckBootstrapVersion": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CheckBootstrapVersion"
+          }
+        ]
+      },
+      "displayName": "CdkDemoPipelineStack-prod"
+    },
+    "Tree": {
+      "type": "cdk:tree",
+      "properties": {
+        "file": "tree.json"
+      }
+    }
+  }
+}
